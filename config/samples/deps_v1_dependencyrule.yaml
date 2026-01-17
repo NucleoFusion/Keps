@@ -1,0 +1,9 @@
+apiVersion: deps.keps.io/v1
+kind: DependencyRule
+metadata:
+  labels:
+    app.kubernetes.io/name: keps
+    app.kubernetes.io/managed-by: kustomize
+  name: dependencyrule-sample
+spec:
+  # TODO(user): Add fields here
