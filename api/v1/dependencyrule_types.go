@@ -20,19 +20,63 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+type SubjectRef struct {
+	// APIGroup of the subject resource (e.g. "apps").
+	// Empty means core API group.
+	// +optional
+	APIGroup string `json:"apiGroup,omitempty"`
+
+	// Kind of the subject resource (e.g. Deployment).
+	// +kubebuilder:validation:Required
+	Kind string `json:"kind"`
+
+	// Name selects a single object.
+	// Mutually exclusive with Selector.
+	// +optional
+	Name string `json:"name,omitempty"`
+
+	// Selector selects multiple objects.
+	// Mutually exclusive with Name.
+	// +optional
+	Selector *metav1.LabelSelector `json:"selector,omitempty"`
+}
+
+type DependencyRef struct {
+	// APIGroup of the dependency resource.
+	// Empty means core API group.
+	// +optional
+	APIGroup string `json:"apiGroup,omitempty"`
+
+	// Kind of the dependency resource.
+	// +kubebuilder:validation:Required
+	Kind string `json:"kind"`
+
+	// Name of the dependency resource.
+	// +kubebuilder:validation:Required
+	Name string `json:"name"`
+}
+
+type EnforcementMode string
+
+const (
+	EnforcementStrict EnforcementMode = "Strict"
+	EnforcementWarn   EnforcementMode = "Warn"
+)
 
 // DependencyRuleSpec defines the desired state of DependencyRule
 type DependencyRuleSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+	// Subject defines the resource(s) this rule applies to.
+	// +kubebuilder:validation:Required
+	Subject SubjectRef `json:"subject"`
 
-	// foo is an example field of DependencyRule. Edit dependencyrule_types.go to remove/update
-	// +optional
-	Foo *string `json:"foo,omitempty"`
+	// DependsOn lists resources that must exist before the subject is created or updated.
+	// +kubebuilder:validation:MinItems=1
+	DependsOn []DependencyRef `json:"dependsOn"`
+
+	// Enforcement determines how violations are handled.
+	// +kubebuilder:validation:Enum=Strict;Warn
+	// +kubebuilder:default=Strict
+	Enforcement EnforcementMode `json:"enforcement,omitempty"`
 }
 
 // DependencyRuleStatus defines the observed state of DependencyRule.

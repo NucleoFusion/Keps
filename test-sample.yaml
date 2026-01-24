@@ -1,0 +1,19 @@
+apiVersion: deps.keps.io/v1
+kind: DependencyRule
+metadata:
+  name: app-requires-db
+  namespace: default
+spec:
+  subject:
+    apiGroup: apps
+    kind: Deployment
+    selector:
+      matchLabels:
+        app: my-app
+
+  dependsOn:
+    - apiGroup: apps
+      kind: StatefulSet
+      name: database
+
+  enforcement: Strict

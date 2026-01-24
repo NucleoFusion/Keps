@@ -30,7 +30,7 @@ import (
 
 // nolint:unused
 // log is for logging in this package.
-var deploymentlog = logf.Log.WithName("deployment-resource")
+var deploymentlog = logf.Log.WithName("deployment-webhook")
 
 // SetupDeploymentWebhookWithManager registers the webhook for Deployment in the manager.
 func SetupDeploymentWebhookWithManager(mgr ctrl.Manager) error {

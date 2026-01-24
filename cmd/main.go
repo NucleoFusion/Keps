@@ -36,7 +36,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/webhook"
 
 	depsv1 "github.com/Nucleofusion/keps/api/v1"
-	"github.com/Nucleofusion/keps/internal/controller"
 	webhookv1 "github.com/Nucleofusion/keps/internal/webhook/v1"
 	// +kubebuilder:scaffold:imports
 )
@@ -179,13 +178,13 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err := (&controller.DependencyRuleReconciler{
-		Client: mgr.GetClient(),
-		Scheme: mgr.GetScheme(),
-	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "DependencyRule")
-		os.Exit(1)
-	}
+	// if err := (&controller.DependencyRuleReconciler{
+	// 	Client: mgr.GetClient(),
+	// 	Scheme: mgr.GetScheme(),
+	// }).SetupWithManager(mgr); err != nil {
+	// 	setupLog.Error(err, "unable to create controller", "controller", "DependencyRule")
+	// 	os.Exit(1)
+	// }
 	// nolint:goconst
 	if os.Getenv("ENABLE_WEBHOOKS") != "false" {
 		if err := webhookv1.SetupDeploymentWebhookWithManager(mgr); err != nil {
